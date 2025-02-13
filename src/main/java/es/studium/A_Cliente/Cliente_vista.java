@@ -1,7 +1,5 @@
 package es.studium.A_Cliente;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -22,32 +20,15 @@ public class Cliente_vista extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField txtEnviarMensajeCliente;
-	private JTextArea txaMostrarChatCliente;
+	static JTextField txtEnviarMensajeCliente;
+	static JTextArea txaMostrarChatCliente;
 	private JScrollPane scrollPaneMostrarChat;
 	private JButton btnEnviarCliente;
 	private JLabel lblParticipantes;
 	private JLabel lblChat;
 	private JButton btnSalirCliente;
-	private JTextArea txaParticipantesCliente;
+	static JTextArea txaParticipantesCliente;
 	private JScrollPane scrollPaneParticipantes;
-
-	/**
-	 * Método por el que se ejecuta la aplicación.
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Cliente_vista frame = new Cliente_vista();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Constructor vacío de la clase.

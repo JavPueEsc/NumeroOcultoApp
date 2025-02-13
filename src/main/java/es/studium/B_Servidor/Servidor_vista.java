@@ -1,5 +1,6 @@
 package es.studium.B_Servidor;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -21,8 +22,8 @@ import javax.swing.SwingConstants;
 public class Servidor_vista extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField txtMostrarConexiones;
-	private JTextArea txaMostrarChatServidor;
+	static JTextField txtMostrarConexiones;
+	static JTextArea txaMostrarChatServidor;
 	private JScrollPane scrollPaneMostrarChat;
 	private JLabel lblParticipantes;
 	private JButton btnSalirServidor;
@@ -30,23 +31,7 @@ public class Servidor_vista extends JFrame {
 	private JScrollPane scrollPaneParticipantes;
 	private JLabel lblNunmeroOculto;
 	private JLabel numOculto;
-
-	/**
-	 * Método por el que se ejecuta la aplicación.
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Servidor_vista frame = new Servidor_vista();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	static JTextField txtInformacion;
 
 	/**
 	 * Constructor vacío de la clase.
@@ -63,12 +48,16 @@ public class Servidor_vista extends JFrame {
 		contentPane.setLayout(null);
 		
 		txaMostrarChatServidor = new JTextArea();
+		txaMostrarChatServidor.setEnabled(false);
+		txaMostrarChatServidor.setDisabledTextColor(Color.BLACK);
 		scrollPaneMostrarChat = new JScrollPane(txaMostrarChatServidor);
-		scrollPaneMostrarChat.setBounds(20, 63, 400, 255);
+		scrollPaneMostrarChat.setBounds(20, 63, 400, 212);
 		contentPane.add(scrollPaneMostrarChat);
 		
 		txtMostrarConexiones = new JTextField();
 		txtMostrarConexiones.setBounds(20, 20, 400, 23);
+		txtMostrarConexiones.setEnabled(false);
+		txtMostrarConexiones.setDisabledTextColor(Color.BLACK);
 		contentPane.add(txtMostrarConexiones);
 		txtMostrarConexiones.setColumns(10);
 		
@@ -81,6 +70,8 @@ public class Servidor_vista extends JFrame {
 		contentPane.add(lblParticipantes);
 		
 		txaParticipantesServidor = new JTextArea();
+		txaParticipantesServidor.setEnabled(false);
+		txaParticipantesServidor.setDisabledTextColor(Color.BLACK);
 		scrollPaneParticipantes = new JScrollPane(txaParticipantesServidor);
 		scrollPaneParticipantes.setBounds(435, 63, 113, 212);
 		contentPane.add(scrollPaneParticipantes);
@@ -98,9 +89,24 @@ public class Servidor_vista extends JFrame {
 		
 		numOculto = new JLabel("100");
 		numOculto.setHorizontalAlignment(SwingConstants.CENTER);
-		numOculto.setFont(new Font("Tahoma", Font.PLAIN, 38));
-		numOculto.setBounds(435, 315, 113, 46);
+		numOculto.setFont(new Font("Tahoma", Font.PLAIN, 70));
+		numOculto.setBounds(425, 296, 120, 65);
 		contentPane.add(numOculto);
+		
+		txtInformacion = new JTextField();
+		txtInformacion.setEnabled(false);
+		txtInformacion.setDisabledTextColor(Color.BLACK);
+		txtInformacion.setBounds(20, 295, 400, 23);
+		contentPane.add(txtInformacion);
+		txtInformacion.setColumns(10);
+	}
+
+	public JTextField getTxtInformacion() {
+		return txtInformacion;
+	}
+
+	public void setTxtInformacion(JTextField txtInformacion) {
+		this.txtInformacion = txtInformacion;
 	}
 
 	//Métodos inspectores.

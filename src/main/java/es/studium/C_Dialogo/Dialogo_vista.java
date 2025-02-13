@@ -1,4 +1,4 @@
-package es.studium.A_Cliente;
+package es.studium.C_Dialogo;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -78,6 +78,38 @@ public class Dialogo_vista extends JDialog {
 				panelBotonera.add(btnDlgCancelar);
 			}
 		}
+		
+		
+	}
+
+	//Métodos inspectores.
+	public JTextField getTxtNick() {
+		return txtNick;
+	}
+
+
+	public void setTxtNick(JTextField txtNick) {
+		this.txtNick = txtNick;
+	}
+
+
+	public JButton getBtnDlgAceptar() {
+		return btnDlgAceptar;
+	}
+
+
+	public void setBtnDlgAceptar(JButton btnDlgAceptar) {
+		this.btnDlgAceptar = btnDlgAceptar;
+	}
+
+
+	public JButton getBtnDlgCancelar() {
+		return btnDlgCancelar;
+	}
+
+
+	public void setBtnDlgCancelar(JButton btnDlgCancelar) {
+		this.btnDlgCancelar = btnDlgCancelar;
 	}
 
 }
