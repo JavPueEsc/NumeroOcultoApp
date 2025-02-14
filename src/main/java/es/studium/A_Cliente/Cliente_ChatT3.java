@@ -202,6 +202,7 @@ public class Cliente_ChatT3 extends JFrame implements ActionListener{
 				// al servidor que el cliente se ha cerrado
 						else if (e.getSource() == btnSalirCliente) {
 							String texto = "SERVIDOR -> "+ nombre+ " ... Abandona el chat.";
+							
 							try {
 								fsalida.writeUTF(texto);
 								fsalida.writeUTF("*");
@@ -222,21 +223,26 @@ public class Cliente_ChatT3 extends JFrame implements ActionListener{
 						try {
 							String textoEntrada = fentrada.readUTF();
 							
-							String cadenaProcesada1 = textoEntrada.replace("SERVIDOR> ", "");
-							System.out.println(cadenaProcesada1);
-							String nombreParticipante = cadenaProcesada1.replace(" ... Entra en el chat.", "");
-							System.out.println(nombreParticipante);
-							//String[] cortar = textoEntrada.split(" ");
-							//cortar[0] = "adios";
-//							for (String palabra : cortar){
-//								System.out.println("PALABRA: "+palabra);
-//							}
-//							//Controloq ue solo los nombres de los participantes se coloquen en el área de texto.
-							if(!nombreParticipante.contains(">") && !nombreParticipante.contains("->")) {
-								Cliente_ChatT3.txaParticipantesCliente.setText(nombreParticipante + "\n");
+							if(!textoEntrada.contains("Abandona")) {
+								String cadenaProcesada1 = textoEntrada.replace("SERVIDOR> ", "");
+								String nombreParticipante = cadenaProcesada1.replace(" ... Entra en el chat.", "");
+								//Controlo que solo los nombres de los participantes se coloquen en el área de texto.
+								if(!nombreParticipante.contains(">") && !nombreParticipante.contains("->")) {
+									Cliente_ChatT3.txaParticipantesCliente.setText(nombreParticipante + "\n");
+								}
 							}
-							System.out.println(textoEntrada);
-							
+							else {
+								//ELIMINAR PARTICIPANTES DEL TXA PARTICIPANTES
+								int indiceParaTrocear = textoEntrada.lastIndexOf(" -> ");
+								String trozoConNombre = (indiceParaTrocear != -1) ? textoEntrada.substring(indiceParaTrocear + 4).trim() : textoEntrada;
+								//System.out.println(trozoConNombre);
+								String[] trozoConNombreTroceado = trozoConNombre.split(" ");
+								String nombreParticipanteAbandona = trozoConNombreTroceado[0];
+								//System.out.println("->"+nombreParticipanteAbandona+"<-");
+//							
+								String ActualizacionParticipantes = Cliente_ChatT3.txaParticipantesCliente.getText().replace(nombreParticipanteAbandona, "");
+								Cliente_ChatT3.txaParticipantesCliente.setText(ActualizacionParticipantes);
+							}
 							txaMostrarChatCliente.setText(textoEntrada);
 						} catch (IOException ex) {
 							JOptionPane.showMessageDialog(null, "Imposible conectar con el servidor \n" + ex.getMessage(),

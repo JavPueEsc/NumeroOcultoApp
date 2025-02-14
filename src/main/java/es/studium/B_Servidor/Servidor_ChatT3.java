@@ -43,7 +43,7 @@ public class Servidor_ChatT3 extends JFrame {
 	static final int PUERTO = 44445;
 	static int CONEXIONES = 0;
 	static int ACTUALES = 0;
-	static int MAXIMO = 2;
+	static int MAXIMO = 4;
 	static Socket[] tabla = new Socket[MAXIMO];
 
 	/**
