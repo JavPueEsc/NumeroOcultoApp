@@ -10,6 +10,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import javax.swing.Timer;
+import javax.swing.UIManager;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -33,7 +35,7 @@ public class Cliente_ChatT3 extends JFrame implements ActionListener{
 	private JScrollPane scrollPaneMostrarChat;
 	private JButton btnEnviarCliente;
 	private JLabel lblParticipantes;
-	private JLabel lblChat;
+	static JLabel lblChat;
 	private JButton btnSalirCliente;
 	static JTextArea txaParticipantesCliente;
 	private JScrollPane scrollPaneParticipantes;
@@ -63,7 +65,7 @@ public class Cliente_ChatT3 extends JFrame implements ActionListener{
 		//Elementos parte de Chat.
 		lblChat = new JLabel("Chat");
 		lblChat.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lblChat.setBounds(20, 20, 49, 23);
+		lblChat.setBounds(20, 20, 400, 23);
 		contentPane.add(lblChat);
 		
 		txaMostrarChatCliente = new JTextArea();
@@ -110,7 +112,7 @@ public class Cliente_ChatT3 extends JFrame implements ActionListener{
 				try {
 					fentrada = new DataInputStream(socket.getInputStream());
 					fsalida = new DataOutputStream(socket.getOutputStream());
-					String texto = "SERVIDOR> Entra en el chat... " + nombre;
+					String texto = "SERVIDOR> Entra en el chat... " + nombre+"";
 					fsalida.writeUTF(texto);
 				} catch (IOException ex) {
 					System.out.println("Error de E/S");
@@ -142,6 +144,7 @@ public class Cliente_ChatT3 extends JFrame implements ActionListener{
 				//cliente.setBounds(0, 0, 540, 400);
 				cliente.setVisible(true);
 				cliente.setTitle("Número oculto - Chat de "+nombre);
+				lblChat.setText("Chat de "+nombre);
 				cliente.ejecutar();
 			} else {
 				System.out.println("El nombre está vacío...");
@@ -152,13 +155,43 @@ public class Cliente_ChatT3 extends JFrame implements ActionListener{
 		// el mensaje introducido se envía al servidor por el flujo de salida
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == btnEnviarCliente) {
-					String texto = nombre + "> " + txtEnviarMensajeCliente.getText();
+					String texto = nombre + " > " + txtEnviarMensajeCliente.getText();
+					System.out.println(txtEnviarMensajeCliente.getText());
 					try {
-						txtEnviarMensajeCliente.setText("");
-						fsalida.writeUTF(texto);
-					} catch (IOException ex) {
-						ex.printStackTrace();
-					}
+			            int numero = Integer.parseInt(txtEnviarMensajeCliente.getText());
+			            System.out.println("El número es: " + numero);
+			            try {
+							txtEnviarMensajeCliente.setText("");
+							fsalida.writeUTF(texto);
+							//Desabilitar botón por 3 segundos.
+							btnEnviarCliente.setEnabled(false);
+							btnEnviarCliente.setText("Bloqueado");
+							//Cambio el color del texto de los botonesuando están desabilitados
+							UIManager.put("Button.disabledText", Color.yellow);
+							btnEnviarCliente.setBackground(new Color(220, 20, 60));
+							
+							// Temporizador para reactivar el botón después de 3 segundos (3000 ms)
+			                Timer timer = new Timer(3000, new ActionListener() {
+			                    @Override
+			                    public void actionPerformed(ActionEvent evt) {
+			                    	btnEnviarCliente.setEnabled(true); // Volver a habilitar el botón
+			                    	btnEnviarCliente.setBackground(new Color(240, 240, 240));
+			                    	btnEnviarCliente.setText("Enviar");
+			                    }
+			                });
+
+			                timer.setRepeats(false); // Ejecutar solo una vez
+			                timer.start();
+							
+						} catch (IOException ex) {
+							ex.printStackTrace();
+						}
+					} catch (NumberFormatException excep) {
+			        	JOptionPane.showMessageDialog(null, "'"+txtEnviarMensajeCliente.getText()+"' no es un número.",
+								"<<Error>>", JOptionPane.ERROR_MESSAGE);
+			            txtEnviarMensajeCliente.setText("");
+			        }
+					//----------------
 				}
 				// Si se pulsa el botón Salir,
 				// se envía un mensaje indicando que el cliente abandona el chat

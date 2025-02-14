@@ -43,6 +43,9 @@ public class ServidorHilo extends Thread {
 // El texto que el cliente escribe en el chat,
 // se añade al textarea del servidor y se reenvía a todos los clientes
 				else {
+					//String[] cortar = cadena.split(" ");
+					//String nombreCortado = cortar[5];
+					//Servidor_ChatT3.txaParticipantesServidor.append(nombreCortado + "\n");
 					Servidor_ChatT3.txaMostrarChatServidor.append(cadena + "\n");
 					texto = Servidor_ChatT3.txaMostrarChatServidor.getText();
 					EnviarMensajes(texto);
@@ -53,7 +56,7 @@ public class ServidorHilo extends Thread {
 			}
 		}
 	}
-
+	
 // El método EnviarMensajes() envía el texto del textarea a
 // todos los sockets que están en la tabla de sockets,
 // de esta forma todos ven la conversación.

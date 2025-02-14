@@ -33,7 +33,7 @@ public class Servidor_ChatT3 extends JFrame {
 	private JScrollPane scrollPaneMostrarChat;
 	private JLabel lblParticipantes;
 	private JButton btnSalirServidor;
-	private JTextArea txaParticipantesServidor;
+	static JTextArea txaParticipantesServidor;
 	private JScrollPane scrollPaneParticipantes;
 	private JLabel lblNunmeroOculto;
 	private JLabel numOculto;
