@@ -3,6 +3,9 @@ package es.studium.A_Cliente;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import es.studium.B_Servidor.Servidor_ChatT3;
+
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -112,7 +115,7 @@ public class Cliente_ChatT3 extends JFrame implements ActionListener{
 				try {
 					fentrada = new DataInputStream(socket.getInputStream());
 					fsalida = new DataOutputStream(socket.getOutputStream());
-					String texto = "SERVIDOR> Entra en el chat... " + nombre+"";
+					String texto = "SERVIDOR> "+ nombre+""+" ..." +" Entra en el chat.";
 					fsalida.writeUTF(texto);
 				} catch (IOException ex) {
 					System.out.println("Error de E/S");
@@ -198,7 +201,7 @@ public class Cliente_ChatT3 extends JFrame implements ActionListener{
 				// y también se envía un * para indicar
 				// al servidor que el cliente se ha cerrado
 						else if (e.getSource() == btnSalirCliente) {
-							String texto = "SERVIDOR> Abandona el chat... " + nombre;
+							String texto = "SERVIDOR -> "+ nombre+ " ... Abandona el chat.";
 							try {
 								fsalida.writeUTF(texto);
 								fsalida.writeUTF("*");
@@ -214,11 +217,27 @@ public class Cliente_ChatT3 extends JFrame implements ActionListener{
 			// en el momento que el cliente pulse el botón Salir
 			// y se modifique la variable repetir
 				public void ejecutar() {
-					String texto = "";
+					//String texto = "";
 					while (repetir) {
 						try {
-							texto = fentrada.readUTF();
-							txaMostrarChatCliente.setText(texto);
+							String textoEntrada = fentrada.readUTF();
+							
+							String cadenaProcesada1 = textoEntrada.replace("SERVIDOR> ", "");
+							System.out.println(cadenaProcesada1);
+							String nombreParticipante = cadenaProcesada1.replace(" ... Entra en el chat.", "");
+							System.out.println(nombreParticipante);
+							//String[] cortar = textoEntrada.split(" ");
+							//cortar[0] = "adios";
+//							for (String palabra : cortar){
+//								System.out.println("PALABRA: "+palabra);
+//							}
+//							//Controloq ue solo los nombres de los participantes se coloquen en el área de texto.
+							if(!nombreParticipante.contains(">") && !nombreParticipante.contains("->")) {
+								Cliente_ChatT3.txaParticipantesCliente.setText(nombreParticipante + "\n");
+							}
+							System.out.println(textoEntrada);
+							
+							txaMostrarChatCliente.setText(textoEntrada);
 						} catch (IOException ex) {
 							JOptionPane.showMessageDialog(null, "Imposible conectar con el servidor \n" + ex.getMessage(),
 									"<<Mensaje de Error:2>>", JOptionPane.ERROR_MESSAGE);

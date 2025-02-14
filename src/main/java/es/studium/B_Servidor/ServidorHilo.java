@@ -43,9 +43,13 @@ public class ServidorHilo extends Thread {
 // El texto que el cliente escribe en el chat,
 // se añade al textarea del servidor y se reenvía a todos los clientes
 				else {
-					//String[] cortar = cadena.split(" ");
-					//String nombreCortado = cortar[5];
-					//Servidor_ChatT3.txaParticipantesServidor.append(nombreCortado + "\n");
+					String[] cortar = cadena.split(" ");
+					String nombreCortado = cortar[1];
+					//Controloq ue solo los nombres de los participantes se coloquen en el área de texto.
+					if(!nombreCortado.equals(">") && !nombreCortado.equals("->")) {
+						Servidor_ChatT3.txaParticipantesServidor.append(nombreCortado + "\n");
+					}
+										
 					Servidor_ChatT3.txaMostrarChatServidor.append(cadena + "\n");
 					texto = Servidor_ChatT3.txaMostrarChatServidor.getText();
 					EnviarMensajes(texto);
