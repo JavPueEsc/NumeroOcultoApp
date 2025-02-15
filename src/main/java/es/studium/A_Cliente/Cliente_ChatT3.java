@@ -271,8 +271,7 @@ public class Cliente_ChatT3 extends JFrame implements ActionListener, WindowList
 									JOptionPane.showMessageDialog(this, 
 											"La partida ha finalizado, "+nombreParticipanteGana + " ha ganado. \n Ha sido expulsado de la sala.", 
 										    "<<Información>>", 
-										    JOptionPane.INFORMATION_MESSAGE);
-									
+										    JOptionPane.INFORMATION_MESSAGE);					
 									repetir =false;
 							}
 							else {
@@ -280,7 +279,7 @@ public class Cliente_ChatT3 extends JFrame implements ActionListener, WindowList
 							}
 							txaMostrarChatCliente.setText(textoEntrada);
 						} catch (IOException ex) {
-							JOptionPane.showMessageDialog(null, "Imposible conectar con el servidor \n" + ex.getMessage(),
+							JOptionPane.showMessageDialog(null, "Ha sido imposible conectar con el servidor.",
 									"<<Mensaje de Error:2>>", JOptionPane.ERROR_MESSAGE);
 							repetir = false;
 						}

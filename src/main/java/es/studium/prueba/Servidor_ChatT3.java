@@ -1,11 +1,11 @@
-package es.studium.B_Servidor;
+package es.studium.prueba;
 
 import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import Modelos.Modelo;
+import es.studium.B_Servidor.ServidorHilo;
 
 import java.awt.Toolkit;
 import java.io.IOException;
@@ -18,20 +18,11 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
 import java.awt.Font;
 import javax.swing.SwingConstants;
 
-/**
- * @author Javier Pueyo
- * @version 1.0
- */
 public class Servidor_ChatT3 extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	static JTextField txtMostrarConexiones;
@@ -54,12 +45,8 @@ public class Servidor_ChatT3 extends JFrame {
 	
 	private Random random = new Random();
 	static String aleatorio;
-	private static int cerrarServidor = 0;
 	private static Servidor_ChatT3 pantalla;
-	
-	/**
-	 * Constructor vacío de la clase.
-	 */
+
 	public Servidor_ChatT3() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage("imagenes\\icono_app.jpg"));
 		setTitle("Número oculto - Ventana del servidor del chat");
@@ -87,8 +74,6 @@ public class Servidor_ChatT3 extends JFrame {
 		contentPane.add(txtMostrarConexiones);
 		txtMostrarConexiones.setColumns(10);
 
-		// Elementos parte de participantes.
-
 		lblParticipantes = new JLabel("Participantes");
 		lblParticipantes.setHorizontalAlignment(SwingConstants.CENTER);
 		lblParticipantes.setFont(new Font("Tahoma", Font.BOLD, 16));
@@ -106,7 +91,6 @@ public class Servidor_ChatT3 extends JFrame {
 		btnSalirServidor.setBounds(20, 338, 113, 23);
 		contentPane.add(btnSalirServidor);
 
-		// Elementos número oculto.
 		lblNunmeroOculto = new JLabel("Número oculto:");
 		lblNunmeroOculto.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNunmeroOculto.setFont(new Font("Tahoma", Font.BOLD, 12));
@@ -118,7 +102,7 @@ public class Servidor_ChatT3 extends JFrame {
 		numOculto.setFont(new Font("Tahoma", Font.PLAIN, 70));
 		numOculto.setBounds(497, 296, 120, 65);
 		contentPane.add(numOculto);
-		aleatorio = random.nextInt(101)+"";
+		aleatorio = random.nextInt(101) + "";
 		numOculto.setText(aleatorio);
 
 		txtInformacion = new JTextField();
@@ -127,71 +111,42 @@ public class Servidor_ChatT3 extends JFrame {
 		txtInformacion.setBounds(20, 295, 452, 23);
 		contentPane.add(txtInformacion);
 		txtInformacion.setColumns(10);
-
 	}
 
 	public static void main(String args[]) throws Exception {
-		// Desde el main se inicia el servidor
-		// y las variables y se prepara la pantalla
 		servidor = new ServerSocket(PUERTO);
 		System.out.println("Servidor iniciado...");
 		pantalla = new Servidor_ChatT3();
 		pantalla.setVisible(true);
 		txtMostrarConexiones.setText("Número de conexiones actuales: " + 0);
-		// Se usa un bucle para controlar el número de conexiones.
-		// Dentro del bucle el servidor espera la conexión
-		// del cliente y cuando se conecta se crea un socket
-		
-		
-		while (getCONEXIONES() <= MAXIMO) {
-			
-			Socket socket;
-			try {
-				socket = servidor.accept();
-			} catch (SocketException sex) {
-				// Sale por aquí si pulsamos el botón salir
-				break;
-			}
-			// El socket creado se añade a la tabla,
-			// se incrementa el número de conexiones
-			// y se lanza el hilo para gestionar los mensajes
-			// del cliente que se acaba de conectar
-			if (CONEXIONES < MAXIMO) {
-				tabla[getCONEXIONES()] = socket;
-				setCONEXIONES(getCONEXIONES() + 1);
-				synchronized (Servidor_ChatT3.class) {
-					Servidor_ChatT3.ACTUALES++;
+
+		while (true) {
+			synchronized (Servidor_ChatT3.class) {
+				if (ACTUALES < MAXIMO) {
+					try {
+						Socket socket = servidor.accept();
+						tabla[ACTUALES] = socket;
+						ACTUALES++;
+
+						ServidorHilo hilo = new ServidorHilo(socket);
+						hilo.start();
+
+						actualizarInterfazConexiones();
+					} catch (SocketException sex) {
+						break;
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				} else {
+					txtInformacion.setForeground(Color.RED);
+					txtInformacion.setText("Máximo número de conexiones alcanzado: " + MAXIMO);
 				}
-				ServidorHilo hilo = new ServidorHilo(socket);
-				System.out.println("Entra "+ACTUALES);
-				hilo.start();
-				if(CONEXIONES ==4) {
-					txtInformacion.setText("Nº máximo de conexiones realizadas: " + MAXIMO+". No más entradas permitidas.");
-				}
-			}else {
-		        // Rechazar la quinta conexión
-		        System.out.println("Conexión rechazada: El servidor ha alcanzado el límite de conexiones.");
-		        try {
-		            socket.getOutputStream().write("Servidor lleno. No se pueden aceptar más conexiones.\n".getBytes());
-		            socket.close();  // Cierra la conexión con el cliente
-		        } catch (IOException e) {
-		            e.printStackTrace();
-		        }
-		    }
-				
 			}
-		
-		// Si se alcanzan 15 conexiones o se pulsa el botón Salir,
-		// el programa se sale del bucle.
-		// Al pulsar Salir se cierra el ServerSocket
-		// lo que provoca una excepción (SocketException)
-		// en la sentencia accept(), la excepción se captura
-		// y se ejecuta un break para salir del bucle
-		
+		}
+
 		if (!servidor.isClosed()) {
-			
 			try {
-				txtInformacion.setForeground(Color.red);
+				txtInformacion.setForeground(Color.RED);
 				txtInformacion.setText("Máximo Nº de conexiones establecidas: " + getCONEXIONES());
 				servidor.close();
 			} catch (IOException ex) {
@@ -201,14 +156,6 @@ public class Servidor_ChatT3 extends JFrame {
 			System.out.println("Servidor finalizado...");
 		}
 	}
-	
-	public static int getCerrarServidor() {
-		return cerrarServidor;
-	}
-
-	public static void setCerrarServidor(int cerrarServidor) {
-		Servidor_ChatT3.cerrarServidor = cerrarServidor;
-	}
 
 	public static int getCONEXIONES() {
 		return CONEXIONES;
@@ -217,19 +164,13 @@ public class Servidor_ChatT3 extends JFrame {
 	public static void setCONEXIONES(int cONEXIONES) {
 		CONEXIONES = cONEXIONES;
 	}
-	
-	public static void verificarCierreServidor() {
-	    if (ACTUALES == 0) {
-	        try {
-	            if (!servidor.isClosed()) {
-	            	Modelo.mostrarMensajeServidor(pantalla);
-	            	servidor.close();
-	                System.out.println("Servidor cerrado automáticamente.");
-	                System.exit(0);	            }
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
-	    }
-	}
 
+	public static void actualizarInterfazConexiones() {
+		txtMostrarConexiones.setText("Número de conexiones actuales: " + ACTUALES);
+
+		if (ACTUALES < MAXIMO) {
+			txtInformacion.setText("");
+		}
+	}
 }
+

@@ -5,6 +5,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+import javax.swing.SwingUtilities;
+
 public class ServidorHilo extends Thread {
 	DataInputStream fentrada;
 	Socket socket;
@@ -114,7 +116,7 @@ public class ServidorHilo extends Thread {
 		}
 	}
 	
-	
+
 // El método EnviarMensajes() envía el texto del textarea a
 // todos los sockets que están en la tabla de sockets,
 // de esta forma todos ven la conversación.
