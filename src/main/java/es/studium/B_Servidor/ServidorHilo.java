@@ -67,17 +67,20 @@ public class ServidorHilo extends Thread {
 						if(numeroPartcipante == Integer.parseInt(Servidor_ChatT3.aleatorio)) {
 							//System.out.println("Son iguales");
 							mensajeIntento = "Y HA ACERTADOOOOO!!!!!";
+							cadena = "SERVIDOR> "+cortar[0]+" piensa que el número es el "+cortar[2]+". "+mensajeIntento+".";
 						}
 						else if (numeroPartcipante > Integer.parseInt(Servidor_ChatT3.aleatorio)){
 							//System.out.println("El intento del participante es mayor que el número oculto");
-							mensajeIntento = "Pero el número es mayor a ";
+							mensajeIntento = "Pero el número es menor a ";
+							cadena = "SERVIDOR> "+cortar[0]+" piensa que el número es el "+cortar[2]+". "+mensajeIntento+" "+cortar[2]+".";
 						}
 						else {
 							//System.out.println("El intento del participante es menor que el número oculto");
-							mensajeIntento = "Pero el número es menor a ";
+							mensajeIntento = "Pero el número es mayor a ";
+							cadena = "SERVIDOR> "+cortar[0]+" piensa que el número es el "+cortar[2]+". "+mensajeIntento+" "+cortar[2]+".";
 						}
 						
-						cadena = "SERVIDOR> "+cortar[0]+" piensa que el número es el "+cortar[2]+". "+mensajeIntento+" "+cortar[2]+".";
+						//cadena = "SERVIDOR> "+cortar[0]+" piensa que el número es el "+cortar[2]+". "+mensajeIntento+" "+cortar[2]+".";
 					}
 					Servidor_ChatT3.txaMostrarChatServidor.append(cadena + "\n");
 					texto = Servidor_ChatT3.txaMostrarChatServidor.getText();

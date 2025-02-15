@@ -3,6 +3,9 @@ package es.studium.A_Cliente;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import Modelos.Modelo;
+
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -54,7 +57,7 @@ public class Cliente_ChatT3 extends JFrame implements ActionListener{
 		setIconImage(Toolkit.getDefaultToolkit().getImage("imagenes\\icono_app.jpg"));
 		setTitle("Número oculto - Chat de cliente");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 578, 413);
+		setBounds(100, 100, 650, 413);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(128, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -70,16 +73,16 @@ public class Cliente_ChatT3 extends JFrame implements ActionListener{
 		
 		txaMostrarChatCliente = new JTextArea();
 		scrollPaneMostrarChat = new JScrollPane(txaMostrarChatCliente);
-		scrollPaneMostrarChat.setBounds(20, 63, 400, 255);
+		scrollPaneMostrarChat.setBounds(20, 63, 452, 255);
 		contentPane.add(scrollPaneMostrarChat);
 		
 		txtEnviarMensajeCliente = new JTextField();
-		txtEnviarMensajeCliente.setBounds(20, 338, 400, 23);
+		txtEnviarMensajeCliente.setBounds(20, 338, 452, 23);
 		contentPane.add(txtEnviarMensajeCliente);
 		txtEnviarMensajeCliente.setColumns(10);
 		
 		btnEnviarCliente = new JButton("Enviar");
-		btnEnviarCliente.setBounds(435, 338, 113, 23);
+		btnEnviarCliente.setBounds(497, 338, 113, 23);
 		contentPane.add(btnEnviarCliente);
 		
 		//Elementos parte de participantes.
@@ -87,16 +90,16 @@ public class Cliente_ChatT3 extends JFrame implements ActionListener{
 		lblParticipantes = new JLabel("Participantes");
 		lblParticipantes.setHorizontalAlignment(SwingConstants.CENTER);
 		lblParticipantes.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lblParticipantes.setBounds(435, 20, 113, 23);
+		lblParticipantes.setBounds(497, 20, 113, 23);
 		contentPane.add(lblParticipantes);
 		
 		txaParticipantesCliente = new JTextArea();
 		scrollPaneParticipantes = new JScrollPane(txaParticipantesCliente);
-		scrollPaneParticipantes.setBounds(435, 63, 113, 212);
+		scrollPaneParticipantes.setBounds(497, 63, 113, 212);
 		contentPane.add(scrollPaneParticipantes);
 		
 		btnSalirCliente = new JButton("Salir");
-		btnSalirCliente.setBounds(435, 295, 113, 23);
+		btnSalirCliente.setBounds(497, 295, 113, 23);
 		contentPane.add(btnSalirCliente);
 		
 		//Se crean los flujos de entrada y salida.
@@ -226,13 +229,14 @@ public class Cliente_ChatT3 extends JFrame implements ActionListener{
 							System.out.println("ulima frase: "+ultimaFrase);
 							
 							if(ultimaFrase.contains("Entra")) {
-								String cadenaProcesada1 = textoEntrada.replace("SERVIDOR> ", "");
-								String nombreParticipante = cadenaProcesada1.replace(" ... Entra en el chat.", "");
-								//Controlo que solo los nombres de los participantes se coloquen en el área de texto.
-								if(!nombreParticipante.contains(">") && !nombreParticipante.contains("->")) {
-									Cliente_ChatT3.txaParticipantesCliente.setText(nombreParticipante + "\n");
-									System.out.println("Persona Entra");
-								}
+								String textoProcesado = Modelo.extraerNombres(textoEntrada);
+//								String cadenaProcesada1 = textoEntrada.replace("SERVIDOR> ", "");
+//								String nombreParticipante = cadenaProcesada1.replace(" ... Entra en el chat.", "");
+//								//Controlo que solo los nombres de los participantes se coloquen en el área de texto.
+//								if(!nombreParticipante.contains(">") && !nombreParticipante.contains("->")) {
+									Cliente_ChatT3.txaParticipantesCliente.setText(textoProcesado + "\n");
+//									System.out.println("Persona Entra");
+//								}
 							}
 							else if (ultimaFrase.contains("Abandona")){
 								//ELIMINAR PARTICIPANTES DEL TXA PARTICIPANTES

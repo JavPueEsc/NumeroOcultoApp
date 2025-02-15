@@ -57,7 +57,7 @@ public class Servidor_ChatT3 extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage("imagenes\\icono_app.jpg"));
 		setTitle("Número oculto - Ventana del servidor del chat");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 578, 413);
+		setBounds(100, 100, 650, 413);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 128, 128));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -69,11 +69,11 @@ public class Servidor_ChatT3 extends JFrame {
 		txaMostrarChatServidor.setEnabled(false);
 		txaMostrarChatServidor.setDisabledTextColor(Color.BLACK);
 		scrollPaneMostrarChat = new JScrollPane(txaMostrarChatServidor);
-		scrollPaneMostrarChat.setBounds(20, 63, 400, 212);
+		scrollPaneMostrarChat.setBounds(20, 63, 452, 212);
 		contentPane.add(scrollPaneMostrarChat);
 
 		txtMostrarConexiones = new JTextField();
-		txtMostrarConexiones.setBounds(20, 20, 400, 23);
+		txtMostrarConexiones.setBounds(20, 20, 452, 23);
 		txtMostrarConexiones.setEnabled(false);
 		txtMostrarConexiones.setDisabledTextColor(Color.BLACK);
 		contentPane.add(txtMostrarConexiones);
@@ -84,14 +84,14 @@ public class Servidor_ChatT3 extends JFrame {
 		lblParticipantes = new JLabel("Participantes");
 		lblParticipantes.setHorizontalAlignment(SwingConstants.CENTER);
 		lblParticipantes.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lblParticipantes.setBounds(435, 20, 113, 23);
+		lblParticipantes.setBounds(497, 20, 113, 23);
 		contentPane.add(lblParticipantes);
 
 		txaParticipantesServidor = new JTextArea();
 		txaParticipantesServidor.setEnabled(false);
 		txaParticipantesServidor.setDisabledTextColor(Color.BLACK);
 		scrollPaneParticipantes = new JScrollPane(txaParticipantesServidor);
-		scrollPaneParticipantes.setBounds(435, 63, 113, 212);
+		scrollPaneParticipantes.setBounds(497, 63, 113, 212);
 		contentPane.add(scrollPaneParticipantes);
 
 		btnSalirServidor = new JButton("Salir");
@@ -102,13 +102,13 @@ public class Servidor_ChatT3 extends JFrame {
 		lblNunmeroOculto = new JLabel("Número oculto:");
 		lblNunmeroOculto.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNunmeroOculto.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblNunmeroOculto.setBounds(320, 338, 100, 23);
+		lblNunmeroOculto.setBounds(372, 337, 100, 23);
 		contentPane.add(lblNunmeroOculto);
 
 		numOculto = new JLabel("100");
 		numOculto.setHorizontalAlignment(SwingConstants.CENTER);
 		numOculto.setFont(new Font("Tahoma", Font.PLAIN, 70));
-		numOculto.setBounds(425, 296, 120, 65);
+		numOculto.setBounds(497, 296, 120, 65);
 		contentPane.add(numOculto);
 		aleatorio = random.nextInt(101)+"";
 		numOculto.setText(aleatorio);
@@ -116,7 +116,7 @@ public class Servidor_ChatT3 extends JFrame {
 		txtInformacion = new JTextField();
 		txtInformacion.setEnabled(false);
 		txtInformacion.setDisabledTextColor(Color.BLACK);
-		txtInformacion.setBounds(20, 295, 400, 23);
+		txtInformacion.setBounds(20, 295, 452, 23);
 		contentPane.add(txtInformacion);
 		txtInformacion.setColumns(10);
 
