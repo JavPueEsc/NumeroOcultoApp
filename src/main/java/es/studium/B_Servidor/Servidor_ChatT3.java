@@ -4,6 +4,9 @@ import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import Modelos.Modelo;
+
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -42,14 +45,16 @@ public class Servidor_ChatT3 extends JFrame {
 
 	static ServerSocket servidor;
 	static final int PUERTO = 44445;
-	static int CONEXIONES = 0;
+	private static int CONEXIONES = 0;
 	static int ACTUALES = 0;
 	static int MAXIMO = 4;
 	static Socket[] tabla = new Socket[MAXIMO];
 	
 	private Random random = new Random();
 	static String aleatorio;
-
+	private static int cerrarServidor = 0;
+	private static Servidor_ChatT3 pantalla;
+	
 	/**
 	 * Constructor vacío de la clase.
 	 */
@@ -58,6 +63,7 @@ public class Servidor_ChatT3 extends JFrame {
 		setTitle("Número oculto - Ventana del servidor del chat");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 650, 413);
+		setResizable(false);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 128, 128));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -127,13 +133,13 @@ public class Servidor_ChatT3 extends JFrame {
 		// y las variables y se prepara la pantalla
 		servidor = new ServerSocket(PUERTO);
 		System.out.println("Servidor iniciado...");
-		Servidor_ChatT3 pantalla = new Servidor_ChatT3();
+		pantalla = new Servidor_ChatT3();
 		pantalla.setVisible(true);
 		txtMostrarConexiones.setText("Número de conexiones actuales: " + 0);
 		// Se usa un bucle para controlar el número de conexiones.
 		// Dentro del bucle el servidor espera la conexión
 		// del cliente y cuando se conecta se crea un socket
-		while (CONEXIONES < MAXIMO) {
+		while (getCONEXIONES() < MAXIMO) {
 			Socket socket;
 			try {
 				socket = servidor.accept();
@@ -145,11 +151,14 @@ public class Servidor_ChatT3 extends JFrame {
 			// se incrementa el número de conexiones
 			// y se lanza el hilo para gestionar los mensajes
 			// del cliente que se acaba de conectar
-			tabla[CONEXIONES] = socket;
-			CONEXIONES++;
+			tabla[getCONEXIONES()] = socket;
+			setCONEXIONES(getCONEXIONES() + 1);
 			ACTUALES++;
 			ServidorHilo hilo = new ServidorHilo(socket);
 			hilo.start();
+			
+			
+			
 		}
 		// Si se alcanzan 15 conexiones o se pulsa el botón Salir,
 		// el programa se sale del bucle.
@@ -157,10 +166,12 @@ public class Servidor_ChatT3 extends JFrame {
 		// lo que provoca una excepción (SocketException)
 		// en la sentencia accept(), la excepción se captura
 		// y se ejecuta un break para salir del bucle
+		
 		if (!servidor.isClosed()) {
+			
 			try {
 				txtInformacion.setForeground(Color.red);
-				txtInformacion.setText("Máximo Nº de conexiones establecidas: " + CONEXIONES);
+				txtInformacion.setText("Máximo Nº de conexiones establecidas: " + getCONEXIONES());
 				servidor.close();
 			} catch (IOException ex) {
 				ex.printStackTrace();
@@ -169,4 +180,35 @@ public class Servidor_ChatT3 extends JFrame {
 			System.out.println("Servidor finalizado...");
 		}
 	}
+	
+	public static int getCerrarServidor() {
+		return cerrarServidor;
+	}
+
+	public static void setCerrarServidor(int cerrarServidor) {
+		Servidor_ChatT3.cerrarServidor = cerrarServidor;
+	}
+
+	public static int getCONEXIONES() {
+		return CONEXIONES;
+	}
+
+	public static void setCONEXIONES(int cONEXIONES) {
+		CONEXIONES = cONEXIONES;
+	}
+	
+	public static void verificarCierreServidor() {
+	    if (ACTUALES == 0) {
+	        try {
+	            if (!servidor.isClosed()) {
+	            	Modelo.mostrarMensajeServidor(pantalla);
+	            	servidor.close();
+	                System.out.println("Servidor cerrado automáticamente.");
+	                System.exit(0);	            }
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	}
+
 }

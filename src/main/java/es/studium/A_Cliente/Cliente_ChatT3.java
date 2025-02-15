@@ -3,12 +3,12 @@ package es.studium.A_Cliente;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
 import Modelos.Modelo;
-
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -29,7 +29,7 @@ import java.awt.Color;
  * @author Javier Pueyo
  * @version 1.0
  */
-public class Cliente_ChatT3 extends JFrame implements ActionListener{
+public class Cliente_ChatT3 extends JFrame implements ActionListener, WindowListener{
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -56,7 +56,8 @@ public class Cliente_ChatT3 extends JFrame implements ActionListener{
 		super(" Conexión del cliente chat: " + nombre);
 		setIconImage(Toolkit.getDefaultToolkit().getImage("imagenes\\icono_app.jpg"));
 		setTitle("Número oculto - Chat de cliente");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setResizable(false);
 		setBounds(100, 100, 650, 413);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(128, 255, 255));
@@ -111,11 +112,12 @@ public class Cliente_ChatT3 extends JFrame implements ActionListener{
 		this.nombre = nombre;
 		btnEnviarCliente.addActionListener(this);
 		btnSalirCliente.addActionListener(this);
+		addWindowListener(this);
 				
 				try {
 					fentrada = new DataInputStream(socket.getInputStream());
 					fsalida = new DataOutputStream(socket.getOutputStream());
-					String texto = "SERVIDOR> "+ nombre+""+" ..." +" Entra en el chat.";
+					String texto = "SERVIDOR> "+ nombre+""+" ..." +" Entra en el juego.";
 					fsalida.writeUTF(texto);
 				} catch (IOException ex) {
 					System.out.println("Error de E/S");
@@ -201,7 +203,7 @@ public class Cliente_ChatT3 extends JFrame implements ActionListener{
 				// y también se envía un * para indicar
 				// al servidor que el cliente se ha cerrado
 						else if (e.getSource() == btnSalirCliente) {
-							String texto = "SERVIDOR -> "+ nombre+ " ... Abandona el chat.";
+							String texto = "SERVIDOR -> "+ nombre+ " ... Abandona el juego.";
 							
 							try {
 								fsalida.writeUTF(texto);
@@ -230,26 +232,48 @@ public class Cliente_ChatT3 extends JFrame implements ActionListener{
 							
 							if(ultimaFrase.contains("Entra")) {
 								String textoProcesado = Modelo.extraerNombres(textoEntrada);
-//								String cadenaProcesada1 = textoEntrada.replace("SERVIDOR> ", "");
-//								String nombreParticipante = cadenaProcesada1.replace(" ... Entra en el chat.", "");
-//								//Controlo que solo los nombres de los participantes se coloquen en el área de texto.
-//								if(!nombreParticipante.contains(">") && !nombreParticipante.contains("->")) {
-									Cliente_ChatT3.txaParticipantesCliente.setText(textoProcesado + "\n");
-//									System.out.println("Persona Entra");
-//								}
+								Cliente_ChatT3.txaParticipantesCliente.setText(textoProcesado + "\n");
 							}
 							else if (ultimaFrase.contains("Abandona")){
 								//ELIMINAR PARTICIPANTES DEL TXA PARTICIPANTES
 								int indiceParaTrocear = textoEntrada.lastIndexOf(" -> ");
 								String trozoConNombre = (indiceParaTrocear != -1) ? textoEntrada.substring(indiceParaTrocear + 4).trim() : textoEntrada;
-								//System.out.println(trozoConNombre);
 								String[] trozoConNombreTroceado = trozoConNombre.split(" ");
 								String nombreParticipanteAbandona = trozoConNombreTroceado[0];
-								//System.out.println("->"+nombreParticipanteAbandona+"<-");
-//							
+													
 								String ActualizacionParticipantes = Cliente_ChatT3.txaParticipantesCliente.getText().replace(nombreParticipanteAbandona, "");
 								Cliente_ChatT3.txaParticipantesCliente.setText(ActualizacionParticipantes);
 								System.out.println("Persona abandona");
+							}
+							
+							else if (ultimaFrase.contains("ACERTADOOOOO")) {
+								int indiceParaTrocear = textoEntrada.lastIndexOf("SERVIDOR>");
+								String trozoConNombre = (indiceParaTrocear != -1) ? textoEntrada.substring(indiceParaTrocear + 10).trim() : textoEntrada;
+								String[] trozoConNombreTroceado = trozoConNombre.split(" ");
+								String nombreParticipanteGana = trozoConNombreTroceado[0].replace(".", "");
+								
+								System.out.println("Ultima frase ganadora"+nombreParticipanteGana);
+								txtEnviarMensajeCliente.setText("El juego ha finalizado");
+								txtEnviarMensajeCliente.setDisabledTextColor(Color.YELLOW);
+								txtEnviarMensajeCliente.setBackground(new Color(220, 20, 60));
+								txtEnviarMensajeCliente.setEnabled(false);
+								
+									System.out.println("ACERTADO");
+									
+									try {
+										
+										fsalida.writeUTF("*");
+						
+									} catch (IOException ex) {
+										ex.printStackTrace();
+									}
+									txaMostrarChatCliente.setText(textoEntrada);
+									JOptionPane.showMessageDialog(this, 
+											"La partida ha finalizado, "+nombreParticipanteGana + " ha ganado. \n Ha sido expulsado de la sala.", 
+										    "<<Información>>", 
+										    JOptionPane.INFORMATION_MESSAGE);
+									
+									repetir =false;
 							}
 							else {
 								System.out.println("El sistema responde a persona que ha intentado acertar.");
@@ -268,4 +292,31 @@ public class Cliente_ChatT3 extends JFrame implements ActionListener{
 						ex.printStackTrace();
 					}
 				}
+
+				@Override
+				public void windowOpened(WindowEvent e) {}
+				@Override
+				public void windowClosing(WindowEvent e) {
+					if(this.isVisible()) {
+						String texto = "SERVIDOR -> "+ nombre+ " ... Abandona el juego.";
+						
+						try {
+							fsalida.writeUTF(texto);
+							fsalida.writeUTF("*");
+							repetir = false;
+						} catch (IOException ex) {
+							ex.printStackTrace();
+						}
+					}
+				}
+				@Override
+				public void windowClosed(WindowEvent e) {}
+				@Override
+				public void windowIconified(WindowEvent e) {}
+				@Override
+				public void windowDeiconified(WindowEvent e) {}
+				@Override
+				public void windowActivated(WindowEvent e) {}
+				@Override
+				public void windowDeactivated(WindowEvent e) {}
 }
