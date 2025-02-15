@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Random;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -45,6 +46,9 @@ public class Servidor_ChatT3 extends JFrame {
 	static int ACTUALES = 0;
 	static int MAXIMO = 4;
 	static Socket[] tabla = new Socket[MAXIMO];
+	
+	private Random random = new Random();
+	static String aleatorio;
 
 	/**
 	 * Constructor vacío de la clase.
@@ -106,6 +110,8 @@ public class Servidor_ChatT3 extends JFrame {
 		numOculto.setFont(new Font("Tahoma", Font.PLAIN, 70));
 		numOculto.setBounds(425, 296, 120, 65);
 		contentPane.add(numOculto);
+		aleatorio = random.nextInt(101)+"";
+		numOculto.setText(aleatorio);
 
 		txtInformacion = new JTextField();
 		txtInformacion.setEnabled(false);

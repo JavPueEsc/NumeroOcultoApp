@@ -3,9 +3,6 @@ package es.studium.A_Cliente;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import es.studium.B_Servidor.Servidor_ChatT3;
-
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -223,15 +220,21 @@ public class Cliente_ChatT3 extends JFrame implements ActionListener{
 						try {
 							String textoEntrada = fentrada.readUTF();
 							
-							if(!textoEntrada.contains("Abandona")) {
+							//Capturar la última frase
+							int indiceUltimaFrase = textoEntrada.lastIndexOf("SERVIDOR");
+							String ultimaFrase = (indiceUltimaFrase != -1) ? textoEntrada.substring(indiceUltimaFrase + 10).trim() : textoEntrada;
+							System.out.println("ulima frase: "+ultimaFrase);
+							
+							if(ultimaFrase.contains("Entra")) {
 								String cadenaProcesada1 = textoEntrada.replace("SERVIDOR> ", "");
 								String nombreParticipante = cadenaProcesada1.replace(" ... Entra en el chat.", "");
 								//Controlo que solo los nombres de los participantes se coloquen en el área de texto.
 								if(!nombreParticipante.contains(">") && !nombreParticipante.contains("->")) {
 									Cliente_ChatT3.txaParticipantesCliente.setText(nombreParticipante + "\n");
+									System.out.println("Persona Entra");
 								}
 							}
-							else {
+							else if (ultimaFrase.contains("Abandona")){
 								//ELIMINAR PARTICIPANTES DEL TXA PARTICIPANTES
 								int indiceParaTrocear = textoEntrada.lastIndexOf(" -> ");
 								String trozoConNombre = (indiceParaTrocear != -1) ? textoEntrada.substring(indiceParaTrocear + 4).trim() : textoEntrada;
@@ -242,6 +245,10 @@ public class Cliente_ChatT3 extends JFrame implements ActionListener{
 //							
 								String ActualizacionParticipantes = Cliente_ChatT3.txaParticipantesCliente.getText().replace(nombreParticipanteAbandona, "");
 								Cliente_ChatT3.txaParticipantesCliente.setText(ActualizacionParticipantes);
+								System.out.println("Persona abandona");
+							}
+							else {
+								System.out.println("El sistema responde a persona que ha intentado acertar.");
 							}
 							txaMostrarChatCliente.setText(textoEntrada);
 						} catch (IOException ex) {

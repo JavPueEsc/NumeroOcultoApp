@@ -9,6 +9,8 @@ public class ServidorHilo extends Thread {
 	DataInputStream fentrada;
 	Socket socket;
 	boolean fin = false;
+	static String cadena;
+	private String mensajeIntento;
 
 	public ServidorHilo(Socket socket) {
 		this.socket = socket;
@@ -32,7 +34,7 @@ public class ServidorHilo extends Thread {
 // entonces se sale del bucle while, ya que termina el proceso del cliente,
 // de esta manera se controlan las conexiones actuales
 		while (!fin) {
-			String cadena = "";
+			cadena = "";
 			try {
 				cadena = fentrada.readUTF();
 				if (cadena.trim().equals("*")) {
@@ -43,7 +45,7 @@ public class ServidorHilo extends Thread {
 // El texto que el cliente escribe en el chat,
 // se añade al textarea del servidor y se reenvía a todos los clientes
 				else {
-					if(!cadena.contains("Abandona")) {
+					if(cadena.contains("Entra")) {
 						String[] cortar = cadena.split(" ");
 						String nombreCortado = cortar[1];
 						//Controloq ue solo los nombres de los participantes se coloquen en el área de texto.
@@ -51,12 +53,31 @@ public class ServidorHilo extends Thread {
 							Servidor_ChatT3.txaParticipantesServidor.append(nombreCortado + "\n");
 						}					
 					}
-					else {
+					else if (cadena.contains("Abandona")){
 						String[] cortar = cadena.split(" ");
 						String nombreCortado = cortar[2];
 						
 						String actualizacionParticipantes = Servidor_ChatT3.txaParticipantesServidor.getText().replace(nombreCortado, "");
 						Servidor_ChatT3.txaParticipantesServidor.setText(actualizacionParticipantes);
+					}
+					else {
+						String[] cortar = cadena.split(" ");
+						int numeroPartcipante = Integer.parseInt(cortar[2]);
+						
+						if(numeroPartcipante == Integer.parseInt(Servidor_ChatT3.aleatorio)) {
+							//System.out.println("Son iguales");
+							mensajeIntento = "Y HA ACERTADOOOOO!!!!!";
+						}
+						else if (numeroPartcipante > Integer.parseInt(Servidor_ChatT3.aleatorio)){
+							//System.out.println("El intento del participante es mayor que el número oculto");
+							mensajeIntento = "Pero el número es mayor a ";
+						}
+						else {
+							//System.out.println("El intento del participante es menor que el número oculto");
+							mensajeIntento = "Pero el número es menor a ";
+						}
+						
+						cadena = "SERVIDOR> "+cortar[0]+" piensa que el número es el "+cortar[2]+". "+mensajeIntento+" "+cortar[2]+".";
 					}
 					Servidor_ChatT3.txaMostrarChatServidor.append(cadena + "\n");
 					texto = Servidor_ChatT3.txaMostrarChatServidor.getText();
