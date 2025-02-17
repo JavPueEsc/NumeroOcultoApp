@@ -5,8 +5,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-import javax.swing.SwingUtilities;
-
 public class ServidorHilo extends Thread {
 	DataInputStream fentrada;
 	Socket socket;

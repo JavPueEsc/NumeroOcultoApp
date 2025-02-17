@@ -3,7 +3,9 @@ package es.studium.A_Cliente;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import Modelos.Modelo;
+
+import es.studium.Metodos.Metodos;
+
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -231,7 +233,7 @@ public class Cliente_ChatT3 extends JFrame implements ActionListener, WindowList
 							System.out.println("ulima frase: "+ultimaFrase);
 							
 							if(ultimaFrase.contains("Entra")) {
-								String textoProcesado = Modelo.extraerNombres(textoEntrada);
+								String textoProcesado = Metodos.extraerNombres(textoEntrada);
 								Cliente_ChatT3.txaParticipantesCliente.setText(textoProcesado + "\n");
 							}
 							else if (ultimaFrase.contains("Abandona")){

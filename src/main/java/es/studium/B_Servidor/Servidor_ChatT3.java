@@ -4,10 +4,10 @@ import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import Modelos.Modelo;
-
+import es.studium.Metodos.Metodos;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -18,8 +18,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
 import java.awt.Font;
 import javax.swing.SwingConstants;
 
@@ -27,7 +25,7 @@ import javax.swing.SwingConstants;
  * @author Javier Pueyo
  * @version 1.0
  */
-public class Servidor_ChatT3 extends JFrame {
+public class Servidor_ChatT3 extends JFrame implements ActionListener{
 
 	/**
 	 * 
@@ -86,6 +84,8 @@ public class Servidor_ChatT3 extends JFrame {
 		txtMostrarConexiones.setDisabledTextColor(Color.BLACK);
 		contentPane.add(txtMostrarConexiones);
 		txtMostrarConexiones.setColumns(10);
+		
+		
 
 		// Elementos parte de participantes.
 
@@ -127,7 +127,9 @@ public class Servidor_ChatT3 extends JFrame {
 		txtInformacion.setBounds(20, 295, 452, 23);
 		contentPane.add(txtInformacion);
 		txtInformacion.setColumns(10);
-
+		
+		//Listener btn Salir
+		btnSalirServidor.addActionListener(this);
 	}
 
 	public static void main(String args[]) throws Exception {
@@ -166,7 +168,7 @@ public class Servidor_ChatT3 extends JFrame {
 				System.out.println("Entra "+ACTUALES);
 				hilo.start();
 				if(CONEXIONES ==4) {
-					txtInformacion.setText("Nº máximo de conexiones realizadas: " + MAXIMO+". No más entradas permitidas.");
+					txtInformacion.setText("Nº máximo de conexiones realizadas (" + MAXIMO+"). No más entradas permitidas.");
 				}
 			}else {
 		        // Rechazar la quinta conexión
@@ -222,7 +224,7 @@ public class Servidor_ChatT3 extends JFrame {
 	    if (ACTUALES == 0) {
 	        try {
 	            if (!servidor.isClosed()) {
-	            	Modelo.mostrarMensajeServidor(pantalla);
+	            	Metodos.mostrarMensajeServidor(pantalla);
 	            	servidor.close();
 	                System.out.println("Servidor cerrado automáticamente.");
 	                System.exit(0);	            }
@@ -230,6 +232,19 @@ public class Servidor_ChatT3 extends JFrame {
 	            e.printStackTrace();
 	        }
 	    }
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnSalirServidor) {
+			try {
+				servidor.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+			System.exit(0);
+		}
+		
 	}
 
 }

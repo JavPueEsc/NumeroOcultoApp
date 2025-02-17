@@ -1,4 +1,4 @@
-package Modelos;
+package es.studium.Metodos;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 
 import es.studium.B_Servidor.ServidorHilo;
 
-public class Modelo {
+public class Metodos {
 
 	public static String extraerNombres(String texto) {
         StringBuilder nombres = new StringBuilder();
@@ -33,9 +33,9 @@ public class Modelo {
 	public static boolean hanTerminadoTodosLosHilos(List<ServidorHilo> hilosActivos) {
 	    for (ServidorHilo hilo : hilosActivos) {
 	        if (hilo.isAlive()) {
-	            return false; // Al menos un hilo sigue activo
+	            return false; 
 	        }
 	    }
-	    return true; // Todos han terminado
+	    return true; 
 	}
 }
