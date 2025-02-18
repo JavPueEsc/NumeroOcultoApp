@@ -182,26 +182,6 @@ public class Servidor_ChatT3 extends JFrame implements ActionListener{
 		    }
 				
 			}
-		
-		// Si se alcanzan 15 conexiones o se pulsa el botón Salir,
-		// el programa se sale del bucle.
-		// Al pulsar Salir se cierra el ServerSocket
-		// lo que provoca una excepción (SocketException)
-		// en la sentencia accept(), la excepción se captura
-		// y se ejecuta un break para salir del bucle
-		
-		if (!servidor.isClosed()) {
-			
-			try {
-				txtInformacion.setForeground(Color.red);
-				txtInformacion.setText("Máximo Nº de conexiones establecidas: " + getCONEXIONES());
-				servidor.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		} else {
-			System.out.println("Servidor finalizado...");
-		}
 	}
 	
 	public static int getCerrarServidor() {

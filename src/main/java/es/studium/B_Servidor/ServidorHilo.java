@@ -88,7 +88,7 @@ public class ServidorHilo extends Thread {
 						if(numeroPartcipante == Integer.parseInt(Servidor_ChatT3.aleatorio)) {
 							//System.out.println("Son iguales");
 							mensajeIntento = "HA ACERTADOOOOO!!!!!";
-							cadena = "SERVIDOR> "+cortar[0]+". "+mensajeIntento+".";
+							cadena = "SERVIDOR> "+cortar[0]+" piensa que es el número "+numeroPartcipante+" y "+mensajeIntento+".";
 						}
 						else if (numeroPartcipante > Integer.parseInt(Servidor_ChatT3.aleatorio)){
 							//System.out.println("El intento del participante es mayor que el número oculto");
